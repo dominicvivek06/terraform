@@ -102,3 +102,12 @@ resource "azurerm_windows_virtual_machine" "app_vm" {
     azurerm_network_interface.app_interface
   ]
 }
+
+
+resource "azurerm_public_ip" "app_public_ip" {
+  name                = "app-public-ip"
+  resource_group_name = local.resource_group
+  location            = local.location
+  allocation_method   = "Static"
+
+}
