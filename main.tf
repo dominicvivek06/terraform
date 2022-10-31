@@ -15,3 +15,9 @@ provider "azurerm" {
     features {    }
     
 }
+
+
+locals {
+  resource_group = "app_grp"
+  location = "UK South"
+}
