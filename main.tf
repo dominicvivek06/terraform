@@ -44,3 +44,32 @@ resource "azurerm_virtual_network" "app_network" {
   }
 
 }
+
+
+
+data "azurerm_subnet" "SubnetA" {
+  name = "SubnetA"
+  virtual_network_name = azurerm_virtual_network.app_network.name
+  resource_group_name = local.resource_group
+}
+
+
+
+
+
+resource "azurerm_network_interface" "app_interface" {
+  name                = "app-interface"
+  location            = local.location
+  resource_group_name = local.resource_group
+
+  ip_configuration {
+    name                          = "internal"
+    subnet_id                     = data.azurerm_subnet.SubnetA.id
+    private_ip_address_allocation = "Dynamic"
+    public_ip_address_id = azurerm_public_ip.app_public_ip.id
+  }
+  depends_on = [
+    azurerm_virtual_network.app_network,
+    azurerm_public_ip.app_public_ip
+  ]
+}
