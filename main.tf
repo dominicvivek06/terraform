@@ -21,3 +21,26 @@ locals {
   resource_group = "app_grp"
   location = "UK South"
 }
+
+
+
+resource "azurerm_resource_group" "app_grp" {
+    name = local.resource_group
+    location = local.location
+  
+}
+
+
+resource "azurerm_virtual_network" "app_network" {
+  name                = "app-network"
+  location            = local.location
+  resource_group_name = local.resource_group
+  address_space       = ["10.0.0.0/16"]
+  dns_servers         = ["10.0.0.4", "10.0.0.5"]
+
+  subnet {
+    name           = "SubnetA"
+    address_prefix = "10.0.1.0/24"
+  }
+
+}
