@@ -111,3 +111,25 @@ resource "azurerm_public_ip" "app_public_ip" {
   allocation_method   = "Static"
 
 }
+
+
+resource "azurerm_managed_disk" "data_disk" {
+  name                 = "data-disk"
+  location             = local.location
+  resource_group_name  = local.resource_group
+  storage_account_type = "Standard_LRS"
+  create_option        = "Empty"
+  disk_size_gb         = "16"
+}
+
+resource "azurerm_virtual_machine_data_disk_attachment" "disk_attach" {
+  managed_disk_id    = azurerm_managed_disk.data_disk.id
+  virtual_machine_id = azurerm_windows_virtual_machine.app_vm.id
+  lun                = "10"
+  caching            = "ReadWrite"
+  depends_on = [
+    azurerm_windows_virtual_machine.app_vm,
+    azurerm_managed_disk.data_disk
+
+  ]
+}
